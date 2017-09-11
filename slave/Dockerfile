@@ -57,7 +57,7 @@ RUN \
     mkdir -p /config && \
 	
 # Cleaning
-	rm -rf /etc/services.d/plex
+	rm -rf /etc/services.d/plex && \
 	apt-get -y --purge autoremove ${buildDeps} && \
 	rm -rf \
 		/tmp/* \
