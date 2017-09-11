@@ -1,0 +1,39 @@
+#!/usr/bin/with-contenv sh
+
+# Check for new export requests
+inotifywait -e close_write,moved_to,create -m /config |
+while read -r directory events filename; do
+	if [ "$filename" = ".prt.conf" ]; then
+		
+		prt_slaves="$(jq -r '.servers | keys[]' /config/.prt.conf)"
+		
+		# Reset PRT exports
+		sed -i '/\/exports /d' /etc/exports
+		sed -i '/\/exports\/plex_conf.d /d' /etc/exports
+		sed -i '/\/exports\/plex_bin.d /d' /etc/exports
+		sed -i '/\/exports\/plex_transcode.d /d' /etc/exports
+		
+		# Share Plexmediaserver directories to PRT slaves
+		if [ -n "$prt_slaves" ]; then
+		
+			# Set source directories
+			echo "/exports " >> /etc/exports
+			echo "/exports/plex_conf.d " >> /etc/exports
+			echo "/exports/plex_bin.d " >> /etc/exports
+			echo "/exports/plex_transcode.d " >> /etc/exports
+			
+			# Set IP's and mount options
+			printf '%s\n' "$prt_slaves" | while IFS= read -r ip; do
+				sed -i "s:/exports :/exports  ${ip}(rw,sync,insecure,no_subtree_check,fsid=0,crossmnt):" /etc/exports
+				sed -i "s:/exports/plex_conf.d :/exports/plex_conf.d  ${ip}(rw,sync,insecure,no_subtree_check,fsid=33,no_root_squash):" /etc/exports
+				sed -i "s:/exports/plex_bin.d :/exports/plex_bin.d  ${ip}(ro,sync,insecure,no_subtree_check,fsid=34,no_root_squash):" /etc/exports
+				sed -i "s:/exports/plex_transcode.d :/exports/plex_transcode.d  ${ip}(rw,sync,insecure,no_subtree_check,fsid=35,no_root_squash):" /etc/exports
+			done
+			
+		fi
+		
+		# Refresh NFS exports
+		/usr/sbin/exportfs -rv
+		
+	fi
+done

@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv sh
+
+/usr/sbin/automount --foreground --verbose /etc/auto.master

@@ -1,0 +1,30 @@
+#!/usr/bin/with-contenv sh
+
+s6-setuidgid plex ssh -tt $(echo ${MASTER_IP} | sed 's/"//g') <<-EOF
+### Set the master IP in the PRT configuration
+echo ${MASTER_IP} | prt install
+
+### Register with the master node
+echo 'y' | prt add_host \$(echo \$SSH_CLIENT | awk '{print \$1}') ${SLAVE_SSH_PORT} plex
+
+### Set the slave IP in Plex allowed networks
+# Get the list of Plex allowed networks
+plex_allowed_networks=\$(xmlstarlet sel -T -t -m "/Preferences" -v @allowedNetworks -n "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Preferences.xml")
+
+# Check that the slave IP is not already a Plex allowed network
+if ! echo "\${plex_allowed_networks}" | grep -q "\$(echo \$SSH_CLIENT | awk '{print \$1}')"; then
+
+	# Generate updated list
+	if [ -z "\$plex_allowed_networks" ]; then
+		plex_allowed_networks="\$(echo \$SSH_CLIENT | awk '{print \$1}')"
+	else
+		plex_allowed_networks="\${plex_allowed_networks},\$(echo \$SSH_CLIENT | awk '{print \$1}')"
+	fi
+
+	# Apply the updated list
+	xmlstarlet ed --inplace --update "/Preferences/@allowedNetworks" -v "\${plex_allowed_networks}" "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Preferences.xml"
+
+fi
+
+exit
+EOF

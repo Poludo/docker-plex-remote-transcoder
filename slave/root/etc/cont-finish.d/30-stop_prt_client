@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv sh
+
+# Unregister from the master node
+s6-setuidgid plex ssh -tt $(echo ${MASTER_IP} | sed 's/"//g') << EOF
+prt remove_host \$(echo \$SSH_CLIENT | awk '{print \$1}') ${SLAVE_SSH_PORT} plex
+exit
+EOF

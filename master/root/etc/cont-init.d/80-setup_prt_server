@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv sh
+
+# Create PRT configuration files
+if [ ! -f /config/.prt.conf ]; then
+	echo "" | prt install
+	chown plex:plex /config/.prt.conf
+fi

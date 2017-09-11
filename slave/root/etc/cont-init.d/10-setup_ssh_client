@@ -1,0 +1,27 @@
+#!/usr/bin/with-contenv sh
+
+if [ ! -f /config/.ssh/id_rsa -o ! -f /config/.ssh/authorized_keys ]; then
+	echo ""
+	echo "|-----------------------------------------------------------------------------------------|"
+	echo "|                                                                                         |"
+	echo "|                       THE MASTER NODE'S SSH KEY-PAIR IS MISSING.                        |"
+	echo "|  Please import the '/config/.ssh' directory from the master node (with the same path).  |"
+	echo "|                                                                                         |"
+	echo "|-----------------------------------------------------------------------------------------|"
+	echo ""
+	exit 1
+else
+	# Set up ssh controlmaster
+	mkdir -p /config/.ssh/controlmasters
+	printf "Host $(echo ${MASTER_IP} | sed 's/"//g')\n        User plex\n        Port $(echo ${MASTER_SSH_PORT} | sed 's/"//g')\n        ControlPath /config/.ssh/controlmasters/%%r@%%h:%%p\n        ControlMaster auto\n        ControlPersist 2h\n        StrictHostKeyChecking no\n" > /config/.ssh/config
+	# Set ownership permissions
+	chown plex:plex /config
+	chown -R plex:plex /config/.ssh
+	# Set mode permissions
+	chmod go-w /config
+	chmod 700 /config/.ssh
+	chmod 700 /config/.ssh/controlmasters
+	chmod 600 /config/.ssh/authorized_keys	
+	chmod 600 /config/.ssh/config
+	chmod 600 /config/.ssh/id_rsa
+fi

@@ -1,0 +1,16 @@
+#!/usr/bin/with-contenv sh
+
+# Generate the SSH private key
+if [ ! -f /config/.ssh/id_rsa ]; then
+	s6-setuidgid plex ssh-keygen -P '' -f /config/.ssh/id_rsa
+	rm /config/.ssh/id_rsa.pub
+fi
+
+# Allow incoming ssh authentication with the generated private key
+ssh_public_key="$(s6-setuidgid plex ssh-keygen -y -f /config/.ssh/id_rsa)"
+grep -F "${ssh_public_key}" /config/.ssh/authorized_keys >/dev/null 2>&1 || echo "${ssh_public_key}" | s6-setuidgid plex tee -a /config/.ssh/authorized_keys >/dev/null
+
+# Set mod permissions for SSH
+chmod go-w /config
+chmod 700 /config/.ssh
+chmod 600 /config/.ssh/authorized_keys

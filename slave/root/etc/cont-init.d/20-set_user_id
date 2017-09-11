@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv sh
+
+# Set user PUID
+PUID=$(s6-setuidgid plex ssh $(echo ${MASTER_IP} | sed 's/"//g') id -u)
+usermod -o -u "$(echo $PUID | grep -o '[0-9]*')" plex
+
+# Set group PGID
+PGID=$(s6-setuidgid plex ssh $(echo ${MASTER_IP} | sed 's/"//g') id -g)
+groupmod -o -g "$PGID" plex

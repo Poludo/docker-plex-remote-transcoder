@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv sh
+
+cat >/etc/auto.nfsprt <<EOL
+/var/lib/plexmediaserver/Library/Application\ Support/Plex\ Media\ Server   -fstype=nfs4,port=${MASTER_NFS_PORT}   ${MASTER_IP}:/plex_conf.d
+/config/Library/Application\ Support/Plex\ Media\ Server   -fstype=nfs4,port=${MASTER_NFS_PORT}   ${MASTER_IP}:/plex_conf.d
+/usr/lib/plexmediaserver   -fstype=nfs4,port=${MASTER_NFS_PORT}   ${MASTER_IP}:/plex_bin.d
+/transcode   -fstype=nfs4,port=${MASTER_NFS_PORT}   ${MASTER_IP}:/plex_transcode.d
+EOL

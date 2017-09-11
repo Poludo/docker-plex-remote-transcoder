@@ -1,0 +1,10 @@
+#!/usr/bin/with-contenv sh
+
+# Start the NFS server process
+/usr/sbin/rpc.nfsd --debug --no-udp --no-nfs-version 2 --no-nfs-version 3
+
+# Reexport all directories
+/usr/sbin/exportfs -rv
+
+# Start the NFS mount daemon
+/usr/sbin/rpc.mountd --foreground --debug all --no-nfs-version 2 --no-nfs-version 3
