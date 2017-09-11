@@ -1,14 +1,14 @@
 # Docker container for Plex-Remote-Transcoder
 This repository contains a set of Docker containers that make the set up of Plex-Remote-Transcoder, a distributed transcoding backend for Plex, easy and fast.
 
-### Master container: 
+### Master container
 Official Plex Docker container on which has been added a bunch of stuff to make it compatible with slave containers running remote transcoders:
 - Based on the official Plex Docker image
 - Plex-Remote-Transcoder installed and set up to be run as a master node
 - Bundled with an SSH server & client for automatic interaction with slave containers
 - Bundled with an NFS server for sharing of required Plex files to slave containers
 
-### Slave container:
+### Slave container
 Container on which is running a Plex-Remote-Transcoder client, it will automatically connect to the master container and register itself to it when started.
 
 # Usage
@@ -24,6 +24,7 @@ You have to configure it like the official Plex Docker container: https://github
 ```
 docker create \
   --name=plex \
+  --privileged \
 	< ... > \
 	-p <random available port for ssh>:22 \
 	-p <random available port for nfs>:2049/tcp \
@@ -35,6 +36,8 @@ Note: The content and the (recursive) permissions of the "/data" directory has t
 ```
 docker create \
   --name=plex-remote-transcoder \
+  --cap-add SYS_ADMIN \
+  --device /dev/fuse \
 	-v /etc/localtime:/etc/localtime:ro \
 	-v <path to config>:/config \
 	-v <path to media>:/data \
