@@ -31,7 +31,6 @@ RUN \
 	
 # NFS Server configuration
 	echo "nfs             2049/tcp" >> /etc/services && \
-	echo "nfs             111/udp" >> /etc/services && \
 	
 # SSHD configuration
 	mkdir /var/run/sshd && \
@@ -51,4 +50,4 @@ RUN \
 
 COPY root/ /
 
-EXPOSE 22 111/udp 2049/tcp
+EXPOSE 22 2049/tcp
