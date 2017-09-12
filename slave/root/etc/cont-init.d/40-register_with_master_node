@@ -4,10 +4,10 @@ s6-setuidgid plex ssh -tt $(echo ${MASTER_IP} | sed 's/"//g') <<-EOF
 ### Set the master IP in the PRT configuration
 echo ${MASTER_IP} | prt install
 
-### Register with the master node
+### Register with PRT
 echo 'y' | prt add_host \$(echo \$SSH_CLIENT | awk '{print \$1}') ${SLAVE_SSH_PORT} plex
 
-### Set the slave IP in Plex allowed networks
+### Register with Plex (allowed networks)
 # Get the list of Plex allowed networks
 plex_allowed_networks=\$(xmlstarlet sel -T -t -m "/Preferences" -v @allowedNetworks -n "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Preferences.xml")
 
@@ -25,6 +25,17 @@ if ! echo "\${plex_allowed_networks}" | grep -q "\$(echo \$SSH_CLIENT | awk '{pr
 	xmlstarlet ed --inplace --update "/Preferences/@allowedNetworks" -v "\${plex_allowed_networks}" "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Preferences.xml"
 
 fi
+
+### Register with SSH ControlMaster
+mkdir -p /config/.ssh/controlmasters
+if [ -e /config/.ssh/config ]; then
+	# Reset SSH settings set for this slave node
+	sed -i "/^Host \$(echo \$SSH_CLIENT | awk '{print \$1}')/,/^Host /{//!d}" /config/.ssh/config
+	sed -i "/^Host \$(echo \$SSH_CLIENT | awk '{print \$1}')/d" /config/.ssh/config
+	# Add a new line at the end of the config file only if it doesn’t already end with one
+	sed -i -e '\$a\' /config/.ssh/config
+fi
+printf "Host \$(echo \$SSH_CLIENT | awk '{print \$1}')\n        User plex\n        Port \$(echo ${SLAVE_SSH_PORT} | sed 's/\"//g')\n        ControlPath /config/.ssh/controlmasters/%%r@%%h:%%p\n        ControlMaster auto\n        ControlPersist 2h\n        StrictHostKeyChecking no\n" >> /config/.ssh/config
 
 exit
 EOF

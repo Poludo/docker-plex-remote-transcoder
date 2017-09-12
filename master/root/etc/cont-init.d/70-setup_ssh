@@ -10,7 +10,13 @@ fi
 ssh_public_key="$(s6-setuidgid plex ssh-keygen -y -f /config/.ssh/id_rsa)"
 grep -F "${ssh_public_key}" /config/.ssh/authorized_keys >/dev/null 2>&1 || echo "${ssh_public_key}" | s6-setuidgid plex tee -a /config/.ssh/authorized_keys >/dev/null
 
+# Set up ssh controlmaster
+s6-setuidgid plex mkdir -p /config/.ssh/controlmasters
+s6-setuidgid plex touch /config/.ssh/config
+
 # Set mod permissions for SSH
 chmod go-w /config
 chmod 700 /config/.ssh
+chmod 700 /config/.ssh/controlmasters
 chmod 600 /config/.ssh/authorized_keys
+chmod 600 /config/.ssh/config
