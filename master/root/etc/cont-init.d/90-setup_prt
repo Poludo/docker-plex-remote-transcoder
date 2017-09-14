@@ -1,6 +1,15 @@
 #!/usr/bin/with-contenv sh
 
 USE_MASTER_TRANSCODER=${USE_MASTER_TRANSCODER:-false}
+DISTRIBUTE_SINGLE_TRANSCODES=${DISTRIBUTE_SINGLE_TRANSCODES:-false}
+
+# Install the selected version of PRT
+if [ "${DISTRIBUTE_SINGLE_TRANSCODES}" = true ]; then
+	cd /app/prt-JJK801/Plex-Remote-Transcoder-master
+else
+	cd /app/prt-wnielson/Plex-Remote-Transcoder-master
+fi
+python setup.py install
 
 # Create PRT configuration files
 if [ ! -f /config/.prt.conf ]; then

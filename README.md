@@ -53,3 +53,4 @@ docker create \
 
 ### Master container
 - `-e USE_MASTER_TRANSCODER=true` Registers the master container as an available Plex transcoder. By default, the master container cannot be used for transcoding unless no slaves are available.
+- `-e DISTRIBUTE_SINGLE_TRANSCODES=true` Runs a single transcoding job on multiple hosts. By default, chunks are only distributed to a single host.

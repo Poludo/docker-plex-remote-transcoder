@@ -1,5 +1,8 @@
 FROM plexinc/pms-docker:latest
 
+# Set environment variables
+ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
+
 RUN \
 # Install packages
 	buildDeps=" \
@@ -18,13 +21,11 @@ RUN \
 		python-setuptools && \
 	
 # Add Plex-Remote-Transcoder
-	curl -o /tmp/prt.zip -L "https://github.com/wnielson/Plex-Remote-Transcoder/archive/master.zip" && \
-	unzip /tmp/prt.zip -d /tmp && \
-	rm -f /tmp/prt.zip && \
-	cd /tmp/Plex-Remote-Transcoder-master && \
-	python setup.py install && \
-	cd / && \
-	rm -rf /tmp/Plex-Remote-Transcoder-master && \
+	curl -o /tmp/prt-wnielson.zip -L "https://github.com/wnielson/Plex-Remote-Transcoder/archive/master.zip" && \
+	curl -o /tmp/prt-JJK801.zip -L "https://github.com/JJK801/Plex-Remote-Transcoder/archive/master.zip" && \
+	mkdir -p /app && \
+	unzip /tmp/prt-wnielson.zip -d /app/prt-wnielson && \
+	unzip /tmp/prt-JJK801.zip -d /app/prt-JJK801 && \
 	
 # Plex-Remote-Transcoder configuration
 	ln -s /config/Library /var/lib/plexmediaserver/Library && \

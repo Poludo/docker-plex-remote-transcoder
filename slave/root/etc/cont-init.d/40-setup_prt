@@ -1,5 +1,15 @@
 #!/usr/bin/with-contenv sh
 
+# Install the version of PRT present on the master node
+DISTRIBUTE_SINGLE_TRANSCODES="$(s6-setuidgid plex ssh $(echo ${MASTER_IP} | sed 's/"//g') 'cat /var/run/s6/container_environment/DISTRIBUTE_SINGLE_TRANSCODES')"
+if [ "${DISTRIBUTE_SINGLE_TRANSCODES}" = true ]; then
+	cd /app/prt-JJK801/Plex-Remote-Transcoder-master
+else
+	cd /app/prt-wnielson/Plex-Remote-Transcoder-master
+fi
+python setup.py install
+
+# Register with the master node
 s6-setuidgid plex ssh -tt $(echo ${MASTER_IP} | sed 's/"//g') <<-EOF
 
 	### Variables
