@@ -5,7 +5,7 @@ inotifywait -e close_write,moved_to,create -m /config |
 while read -r directory events filename; do
 	if [ "$filename" = ".prt.conf" ]; then
 		
-		prt_slaves="$(jq -r '.servers | keys[]' /config/.prt.conf)"
+		prt_slaves="$(jq -r '.servers | keys[]' /config/.prt.conf | sed '/localhost/d')"
 		
 		# Reset PRT exports
 		sed -i '/\/exports /d' /etc/exports
