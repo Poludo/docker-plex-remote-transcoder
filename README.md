@@ -32,7 +32,6 @@ docker create \
 ```
 
 ### Slave container
-Note: The content and the (recursive) permissions of the "/data" directory has to be the same for the master and the slave containers.
 ```
 docker create \
   --name=plex-remote-transcoder \
@@ -54,3 +53,6 @@ docker create \
 ### Master container
 - `-e USE_MASTER_TRANSCODER=true` Registers the master container as an available Plex transcoder. By default, the master container cannot be used for transcoding unless no slaves are available.
 - `-e DISTRIBUTE_SINGLE_TRANSCODES=true` Runs a single transcoding job on multiple hosts. By default, chunks are only distributed to a single host. Please note that the use of this parameter requires the restart of all slave containers.
+
+### Slave container
+- `-e IMPORT_PLEX_MEDIA=false` Disables the import of the Plex media library from the master container over NFS. Can be useful when the media library is accessible by mounting it on the host with [Rclone](https://github.com/ncw/rclone) or [Plexdrive](https://github.com/dweidenfeld/plexdrive). Please note that the media library has to be stored in the "/data" directory of the container. Be also sure to check that the content and the (recursive) permissions of this directory are the same in the master and in the slave containers.

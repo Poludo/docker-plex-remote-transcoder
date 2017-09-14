@@ -1,8 +1,14 @@
 #!/usr/bin/with-contenv sh
 
+IMPORT_PLEX_MEDIA=${IMPORT_PLEX_MEDIA:-true}
+
 cat >/etc/auto.nfsprt <<EOL
 /var/lib/plexmediaserver/Library/Application\ Support/Plex\ Media\ Server   -fstype=nfs4,port=${MASTER_NFS_PORT}   ${MASTER_IP}:/plex_conf.d
 /config/Library/Application\ Support/Plex\ Media\ Server   -fstype=nfs4,port=${MASTER_NFS_PORT}   ${MASTER_IP}:/plex_conf.d
 /usr/lib/plexmediaserver   -fstype=nfs4,port=${MASTER_NFS_PORT}   ${MASTER_IP}:/plex_bin.d
 /transcode   -fstype=nfs4,port=${MASTER_NFS_PORT}   ${MASTER_IP}:/plex_transcode.d
 EOL
+
+if [ "${IMPORT_PLEX_MEDIA}" = true ]; then
+	echo "/data   -fstype=nfs4,port=${MASTER_NFS_PORT}   ${MASTER_IP}:/plex_media.d" >> /etc/auto.nfsprt
+fi

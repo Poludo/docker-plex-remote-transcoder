@@ -11,3 +11,7 @@ mount --bind "/usr/lib/plexmediaserver" "/exports/plex_bin.d"
 # Prepare Plex transcode directory
 mkdir -p "/exports/plex_transcode.d"
 mount --bind "/transcode" "/exports/plex_transcode.d"
+
+# Prepare Plex media directory
+mkdir -p "/exports/plex_media.d"
+mount --bind "/data" "/exports/plex_media.d"
