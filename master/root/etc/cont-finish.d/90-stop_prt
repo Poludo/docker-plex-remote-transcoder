@@ -1,0 +1,6 @@
+#!/usr/bin/with-contenv sh
+
+# Deregister the local transcoder from PRT
+if [ "${USE_MASTER_TRANSCODER}" = true ]; then
+	s6-setuidgid plex prt remove_host localhost 22 plex
+fi
