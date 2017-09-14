@@ -48,3 +48,8 @@ docker create \
 	-e MASTER_SSH_PORT=<master container ssh port> \
   poludo/plex-remote-transcoder:slave
 ```
+
+# Optional parameters
+
+### Master container
+- `-e USE_MASTER_TRANSCODER=true` Registers the master container as an available Plex transcoder. By default, the master container cannot be used for transcoding unless no slaves are available.

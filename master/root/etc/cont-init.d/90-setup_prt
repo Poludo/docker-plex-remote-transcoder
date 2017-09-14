@@ -1,7 +1,14 @@
 #!/usr/bin/with-contenv sh
 
+USE_MASTER_TRANSCODER=${USE_MASTER_TRANSCODER:-false}
+
 # Create PRT configuration files
 if [ ! -f /config/.prt.conf ]; then
 	echo "" | prt install
 	chown plex:plex /config/.prt.conf
+fi
+
+# Register the local transcoder with PRT
+if [ "${USE_MASTER_TRANSCODER}" = true ]; then
+	echo 'y' | s6-setuidgid plex prt add_host localhost 22 plex
 fi
