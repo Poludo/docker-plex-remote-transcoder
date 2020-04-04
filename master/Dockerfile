@@ -28,6 +28,7 @@ RUN \
 	unzip /tmp/prt-JJK801.zip -d /app/prt-JJK801 && \
 	
 # Plex-Remote-Transcoder configuration
+	mkdir -p /var/lib/plexmediaserver && \
 	ln -s /config/Library /var/lib/plexmediaserver/Library && \
 	
 # NFS Server configuration
