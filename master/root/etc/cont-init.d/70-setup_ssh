@@ -1,22 +1,16 @@
 #!/usr/bin/with-contenv sh
 
-# Generate the SSH private key
 if [ ! -f /config/.ssh/id_rsa ]; then
-	s6-setuidgid plex ssh-keygen -P '' -f /config/.ssh/id_rsa
-	rm /config/.ssh/id_rsa.pub
+	# Generate the SSH key pair
+	s6-setuidgid plex ssh-keygen -N '' -f ~/.ssh/id_rsa
+	
+	# Allow incoming ssh authentication using the generated private key
+	s6-setuidgid plex mv ~/.ssh/id_rsa.pub ~/.ssh/authorized_keys
+	chmod 600 ~/.ssh/authorized_keys
+	
+	# Set up ssh controlmaster
+	s6-setuidgid plex mkdir -p /config/.ssh/controlmasters
+	chmod 700 /config/.ssh/controlmasters
+	s6-setuidgid plex touch /config/.ssh/config
+	chmod 600 /config/.ssh/config
 fi
-
-# Allow incoming ssh authentication with the generated private key
-ssh_public_key="$(s6-setuidgid plex ssh-keygen -y -f /config/.ssh/id_rsa)"
-grep -F "${ssh_public_key}" /config/.ssh/authorized_keys >/dev/null 2>&1 || echo "${ssh_public_key}" | s6-setuidgid plex tee -a /config/.ssh/authorized_keys >/dev/null
-
-# Set up ssh controlmaster
-s6-setuidgid plex mkdir -p /config/.ssh/controlmasters
-s6-setuidgid plex touch /config/.ssh/config
-
-# Set mod permissions for SSH
-chmod go-w /config
-chmod 700 /config/.ssh
-chmod 700 /config/.ssh/controlmasters
-chmod 600 /config/.ssh/authorized_keys
-chmod 600 /config/.ssh/config
