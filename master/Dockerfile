@@ -45,5 +45,5 @@ RUN \
 		/var/tmp/*
 
 COPY root/ /
-
+VOLUME /data /usr/lib/plexmediaserver /exports
 EXPOSE 22 2049/tcp

@@ -1,9 +1,6 @@
 # Docker container for Plex-Remote-Transcoder
 This repository contains a set of Docker containers that make the set up of Plex-Remote-Transcoder, a distributed transcoding backend for Plex, easy and fast.
 
-## Important note on OverlayFS
-NFS exports do not work with OverlayFS. In the current state, slave containers will not be able to export their Plex related directories to the master container. The only way to make this work is to have these directories on a different file system.
-
 ## Master container
 Official Plex Docker container on which has been added a bunch of stuff to make it compatible with slave containers running remote transcoders:
 - Based on the official Plex Docker image
@@ -38,8 +35,7 @@ docker create \
 ```
 docker create \
   --name=plex-remote-transcoder \
-  --cap-add SYS_ADMIN \
-  --device /dev/fuse \
+  --privileged \
 	-v /etc/localtime:/etc/localtime:ro \
 	-v <path to config>:/config \
 	-v <path to media>:/data \
