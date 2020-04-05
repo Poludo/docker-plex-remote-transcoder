@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:xenial
 
 # Set version for s6 overlay
 ARG S6_OVERLAY_VERSION=v1.22.1.0

@@ -1,4 +1,4 @@
-FROM plexinc/pms-docker:latest
+FROM plexinc/pms-docker:1.7.5.4035-313f93718
 
 # Set environment variables
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
@@ -9,6 +9,7 @@ RUN \
 		curl \
 		unzip" && \
 	apt-get update && \
+	apt-get upgrade -y && \
 	apt-get install -y --no-install-recommends --no-install-suggests \
 		${buildDeps} \
 		ca-certificates \
