@@ -37,6 +37,7 @@ RUN \
 		/exports/plex_transcode.d && \
 # Configure SSHD
 	mkdir /var/run/sshd && \
+	printf "StrictHostKeyChecking no\n" >> /etc/ssh/ssh_config && \
 # Configure user
 	sed -i -e 's;/config:/bin/false;/config:/bin/bash;g' /etc/passwd && \
 # Clean
