@@ -37,9 +37,6 @@ RUN \
 		/exports/plex_transcode.d && \
 # Configure SSHD
 	mkdir /var/run/sshd && \
-	sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
-	sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd && \
-	printf "StrictHostKeyChecking no\n" >> /etc/ssh/ssh_config && \
 # Configure user
 	sed -i -e 's;/config:/bin/false;/config:/bin/bash;g' /etc/passwd && \
 # Clean

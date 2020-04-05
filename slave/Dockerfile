@@ -37,14 +37,12 @@ RUN \
 	unzip /tmp/prt-wnielson.zip -d /app/prt-wnielson && \
 	unzip /tmp/prt-JJK801.zip -d /app/prt-JJK801 && \
 # Add user
-    useradd -U -m -d /config -s /bin/false plex && \
+    useradd -U -m -d /config -s /bin/bash plex && \
     usermod -G users plex && \
 # Configure Autofs
 	echo "/- /etc/auto.nfsprt" >> /etc/auto.master && \
 # Configure SSHD
 	mkdir /var/run/sshd && \
-	sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
-	sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd && \
 # Cleaning
 	apt-get -y --purge autoremove ${buildDeps} && \
 	rm -rf \
