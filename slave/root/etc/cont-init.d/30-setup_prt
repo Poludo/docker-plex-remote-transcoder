@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv sh
 
 # Install the version of PRT present on the master node
-DISTRIBUTE_SINGLE_TRANSCODES="$(s6-setuidgid plex ssh $(echo ${MASTER_IP} | sed 's/"//g') 'cat /var/run/s6/container_environment/DISTRIBUTE_SINGLE_TRANSCODES')"
+DISTRIBUTE_SINGLE_TRANSCODES="$(s6-setuidgid plex ssh ${MASTER_IP} 'cat /var/run/s6/container_environment/DISTRIBUTE_SINGLE_TRANSCODES')"
 if [ "${DISTRIBUTE_SINGLE_TRANSCODES}" = true ]; then
 	cd /app/prt-JJK801/Plex-Remote-Transcoder-master
 else
@@ -10,7 +10,7 @@ fi
 python setup.py install
 
 # Register with the master node
-s6-setuidgid plex ssh -tt $(echo ${MASTER_IP} | sed 's/"//g') <<-EOF
+s6-setuidgid plex ssh -tt ${MASTER_IP} <<-EOF
 
 	### Variables
 	SLAVE_IP=\$(echo \$SSH_CLIENT | awk '{print \$1}')
@@ -48,7 +48,7 @@ s6-setuidgid plex ssh -tt $(echo ${MASTER_IP} | sed 's/"//g') <<-EOF
 		# Add a new line at the end of the config file only if it doesn’t already end with one
 		sed -i -e '\$a\' /config/.ssh/config
 	fi
-	printf "Host \${SLAVE_IP}\n        User plex\n        Port \$(echo ${SLAVE_SSH_PORT} | sed 's/\"//g')\n        ControlPath /config/.ssh/controlmasters/%%r@%%h:%%p\n        ControlMaster auto\n        ControlPersist 2h\n        StrictHostKeyChecking no\n" >> /config/.ssh/config
+	printf "Host \${SLAVE_IP}\n        User plex\n        Port ${SLAVE_SSH_PORT}\n        ControlPath /config/.ssh/controlmasters/%%r@%%h:%%p\n        ControlMaster auto\n        ControlPersist 2h\n        StrictHostKeyChecking no\n" >> /config/.ssh/config
 
 	exit
 

@@ -12,7 +12,7 @@ if [ ! -f /config/.ssh/id_rsa -o ! -f /config/.ssh/authorized_keys ]; then
 	exit 1
 else
 	# Set up ssh controlmaster
-	printf "Host $(echo ${MASTER_IP} | sed 's/"//g')\n        User plex\n        Port $(echo ${MASTER_SSH_PORT} | sed 's/"//g')\n        ControlPath /config/.ssh/controlmasters/%%r@%%h:%%p\n        ControlMaster auto\n        ControlPersist 2h\n        StrictHostKeyChecking no\n" > /config/.ssh/config
+	printf "Host ${MASTER_IP}\n        User plex\n        Port ${MASTER_SSH_PORT}\n        ControlPath /config/.ssh/controlmasters/%%r@%%h:%%p\n        ControlMaster auto\n        ControlPersist 2h\n        StrictHostKeyChecking no\n" > /config/.ssh/config
 	
 	# Set permissions
 	chown -R plex:plex /config/.ssh
