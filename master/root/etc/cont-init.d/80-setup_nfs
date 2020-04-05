@@ -1,17 +1,7 @@
 #!/usr/bin/with-contenv sh
 
-# Prepare Plex config directory
-mkdir -p "/exports/plex_conf.d"
-mount --bind "/config/Library/Application Support/Plex Media Server" "/exports/plex_conf.d"
-
-# Prepare Plex bin directory
-mkdir -p "/exports/plex_bin.d"
+# Prepare exports of Plex related directories
 mount --bind "/usr/lib/plexmediaserver" "/exports/plex_bin.d"
-
-# Prepare Plex transcode directory
-mkdir -p "/exports/plex_transcode.d"
-mount --bind "/transcode" "/exports/plex_transcode.d"
-
-# Prepare Plex media directory
-mkdir -p "/exports/plex_media.d"
+mount --bind "/config/Library/Application Support/Plex Media Server" "/exports/plex_conf.d"
 mount --bind "/data" "/exports/plex_media.d"
+mount --bind "/transcode" "/exports/plex_transcode.d"

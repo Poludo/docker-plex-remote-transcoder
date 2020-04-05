@@ -25,19 +25,24 @@ RUN \
 	mkdir -p /app && \
 	unzip /tmp/prt-wnielson.zip -d /app/prt-wnielson && \
 	unzip /tmp/prt-JJK801.zip -d /app/prt-JJK801 && \
-# Plex-Remote-Transcoder configuration
+# Configure Plex-Remote-Transcoder
 	mkdir -p /var/lib/plexmediaserver && \
 	ln -s /config/Library /var/lib/plexmediaserver/Library && \
-# NFS Server configuration
+# Configure NFS Server
 	echo "nfs             2049/tcp" >> /etc/services && \
-# SSHD configuration
+	mkdir -p \
+		/exports/plex_bin.d \
+		/exports/plex_conf.d \
+		/exports/plex_media.d \
+		/exports/plex_transcode.d && \
+# Configure SSHD
 	mkdir /var/run/sshd && \
 	sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
 	sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd && \
 	printf "StrictHostKeyChecking no\n" >> /etc/ssh/ssh_config && \
-# User configuration
+# Configure user
 	sed -i -e 's;/config:/bin/false;/config:/bin/bash;g' /etc/passwd && \
-# Cleaning
+# Clean
 	apt-get -y --purge autoremove ${buildDeps} && \
 	rm -rf \
 		/tmp/* \
