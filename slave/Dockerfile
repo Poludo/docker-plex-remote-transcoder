@@ -28,8 +28,8 @@ RUN \
 		python-psutil \
 		python-setuptools && \
 # Add S6 overlay
-    curl -J -L "https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-${PLATFORM_ARCH}.tar.gz" \
-    | tar xz -C / && \
+	curl -J -L "https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-${PLATFORM_ARCH}.tar.gz" \
+	| tar xz -C / && \
 # Add Plex-Remote-Transcoder
 	curl -o /tmp/prt-wnielson.zip -L "https://github.com/wnielson/Plex-Remote-Transcoder/archive/master.zip" && \
 	curl -o /tmp/prt-JJK801.zip -L "https://github.com/JJK801/Plex-Remote-Transcoder/archive/master.zip" && \
@@ -37,13 +37,13 @@ RUN \
 	unzip /tmp/prt-wnielson.zip -d /app/prt-wnielson && \
 	unzip /tmp/prt-JJK801.zip -d /app/prt-JJK801 && \
 # Add user
-    useradd -U -m -d /config -s /bin/bash plex && \
-    usermod -G users plex && \
+	useradd -U -m -d /config -s /bin/bash plex && \
+	usermod -G users plex && \
 # Configure Autofs
 	echo "/- /etc/auto.nfsprt" >> /etc/auto.master && \
 # Configure SSHD
 	mkdir /var/run/sshd && \
-# Cleaning
+# Clean
 	apt-get -y --purge autoremove ${buildDeps} && \
 	rm -rf \
 		/tmp/* \
