@@ -13,8 +13,14 @@ python setup.py install
 
 # Create PRT configuration files
 if [ ! -f /config/.prt.conf ]; then
+	# If clean install
 	echo "" | prt install
 	chown plex:plex /config/.prt.conf
+elif [ ! -f /usr/lib/plexmediaserver/plex_transcoder ]; then
+	# If clean install on existing config
+	mv /config/.prt.conf /config/.prt.conf.bak
+	echo "" | prt install
+	mv /config/.prt.conf.bak /config/.prt.conf
 fi
 
 # Register the local transcoder with PRT
