@@ -36,16 +36,18 @@ docker create \
 docker create \
   --name=plex-remote-transcoder \
   --privileged \
-	-v /etc/localtime:/etc/localtime:ro \
 	-v <path to config>:/config \
 	-v <path to media>:/data \
 	-p <random available port for ssh>:22 \
-	-e SLAVE_SSH_PORT=<ssh port specified above> \
 	-e MASTER_IP=<ip of the host running the master container> \
 	-e MASTER_NFS_PORT=<master container nfs port> \
 	-e MASTER_SSH_PORT=<master container ssh port> \
+	-e SLAVE_SSH_PORT=<ssh port specified above> \
   poludo/plex-remote-transcoder:slave
 ```
+
+## Example
+A [docker-compose example](https://github.com/Poludo/docker-plex-remote-transcoder/blob/master/docker-compose.yml) for setting up a master and slave container locally is available on the repository.
 
 # Optional parameters
 
