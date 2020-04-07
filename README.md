@@ -57,3 +57,7 @@ A [docker-compose example](https://github.com/Poludo/docker-plex-remote-transcod
 
 ## Slave container
 - `-e IMPORT_PLEX_MEDIA=false` Disables the import of the Plex media library from the master container over NFS. Can be useful when the media library is accessible by mounting it on the host with [Rclone](https://github.com/ncw/rclone) or [Plexdrive](https://github.com/dweidenfeld/plexdrive). Please note that the media library has to be stored in the "/data" directory of the container. Be also sure to check that the content and the (recursive) permissions of this directory are the same in the master and in the slave containers.
+
+# Troubleshooting
+- `sudo docker logs -f <container name>` to access a container's logs.
+- `sudo docker exec <master container name> cat /tmp/prt.log` to access the PRT logs of the master container.
